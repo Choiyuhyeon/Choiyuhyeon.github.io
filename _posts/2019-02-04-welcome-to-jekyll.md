@@ -1,4 +1,4 @@
----
+<!-- ---
 layout: post
 author: Choiyuhyeon
 title: Netlify CMS created this Article
@@ -8,7 +8,7 @@ category: jekyll
 summary: Demo Content using Netlify CMS
 keywords: blog test post
 permalink: /blog/using-netlify-cms/
----
+--- -->
 ### **포스팅 테스트**
 
 ```javascript
