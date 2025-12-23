@@ -106,6 +106,9 @@ markdown: kramdown
 highlighter: rouge
 permalink: pretty
 
+# Timezone (한국 시간대)
+timezone: Asia/Seoul
+
 # Choose what to show ( can be true or false)
 show_author_work_experiences: true
 show_author_education_details: true
@@ -158,6 +161,7 @@ defaults:
       sitemap: false
 
 # Build settings
+future: true  # 미래 날짜 포스팅도 포함
 plugins:
   - jekyll-paginate
   - jekyll-gist

@@ -1,20 +1,25 @@
-FROM jekyll/jekyll:latest as build
+FROM jekyll/jekyll:latest
 
 WORKDIR /srv/jekyll
 
-ADD . /srv/jekyll
+# Gemfile만 먼저 복사하고 의존성 설치
+COPY Gemfile ./
+RUN rm -rf Gemfile.lock && bundle install
 
-RUN gem install bundler && \
-    rm -rf Gemfile.lock && \
-    chmod -R 777 ${PWD} && \
-    bundle update && \
-    bundle install
-    # jekyll build && \
-    # jekyll serve --livereload --drafts --trace
+# 나머지 파일 복사
+COPY . /srv/jekyll
 
-ARG build_command
-ENV BUILD_COMMAND ${build_command}
+EXPOSE 4000
+EXPOSE 35729
 
-CMD ${BUILD_COMMAND}
+# entrypoint 스크립트 생성
+RUN echo '#!/bin/bash' > /entrypoint.sh && \
+    echo 'rm -f Gemfile.lock' >> /entrypoint.sh && \
+    echo 'bundle install' >> /entrypoint.sh && \
+    echo 'gem uninstall -aIx sass-embedded 2>/dev/null || true' >> /entrypoint.sh && \
+    echo 'gem install sass-embedded' >> /entrypoint.sh && \
+    echo 'exec "$@"' >> /entrypoint.sh && \
+    chmod +x /entrypoint.sh
 
-# EXPOSE 4000
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["jekyll", "serve", "--livereload", "--host", "0.0.0.0", "--port", "4000", "--future"]
